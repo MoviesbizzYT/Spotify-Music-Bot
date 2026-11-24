@@ -78,9 +78,20 @@ def _make_session() -> requests.Session:
     )
 
     if hidden is None:
+        # Safe diagnostics: do not print cookies, tokens, or the full HTML page.
+        page_title = soup.title.get_text(" ", strip=True) if soup.title else "No title"
+        print(f"[provider] HTTP: {response.status_code}", flush=True)
+        print(f"[provider] URL: {response.url}", flush=True)
+        print(
+            f"[provider] Content-Type: {response.headers.get('Content-Type', 'unknown')}",
+            flush=True,
+        )
+        print(f"[provider] Page title: {page_title[:160]}", flush=True)
+        print("[provider] Expected hidden field: not found", flush=True)
         raise RuntimeError(
-            "The audio provider did not return its expected hidden form field. "
-            "The provider page may have changed or may require a challenge."
+            "spotidown.app did not return the expected form field. "
+            "Check the [provider] diagnostic lines in Koyeb logs. "
+            "The provider may have changed its page or may require a challenge."
         )
 
     field_name = hidden.get("name")
