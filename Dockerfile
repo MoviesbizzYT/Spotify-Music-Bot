@@ -8,7 +8,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY config.py .
 COPY mongodb.py .
 COPY spotify_music_bot.py .
+COPY health_server.py .
 
 RUN mkdir -p /app/downloads
 
-CMD ["python", "spotify_music_bot.py"]
+EXPOSE 8080
+
+CMD ["sh", "-c", "python health_server.py & exec python spotify_music_bot.py"]
