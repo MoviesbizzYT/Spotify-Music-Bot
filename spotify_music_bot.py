@@ -57,8 +57,17 @@ def _make_session() -> requests.Session:
     })
     r = s.get(SPOTI_BASE + "/en2", timeout=30)
     soup = BeautifulSoup(r.text, "html.parser")
-    hidden = soup.find("input", {"type": "hidden", "name": re.compile(r"^_")})
-    s._csrf = {hidden["name"]: hidden["value"]}
+    hidden = soup.find("input", {
+    "type": "hidden",
+    "name": re.compile(r"^_")
+})
+
+if not hidden or not hidden.get("name") or not hidden.get("value"):
+    raise RuntimeError(
+        "Audio provider did not return the expected form data."
+    )
+
+s._csrf = {hidden["name"]: hidden["value"]}
     return s
 
 
