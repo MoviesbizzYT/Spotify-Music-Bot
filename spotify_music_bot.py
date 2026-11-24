@@ -12,7 +12,7 @@ import mongodb
 
 
 SPOTIFY_RE = re.compile(
-    r"https?://open\\.spotify\\.com/(track|playlist|album)/([A-Za-z0-9]+)",
+    r"https?://open\.spotify\.com/(?:intl-[a-z]{2}/)?(track|playlist|album)/([A-Za-z0-9]+)",
     re.IGNORECASE,
 )
 
@@ -183,4 +183,3 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
-    
